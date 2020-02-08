@@ -9,14 +9,14 @@
     </provider>
     
     <!-- tables go here -->
-    <class>com.skilldistillery.eventtracker.entities.FIXME</class>
+    <class>com.skilldistillery.eventtracker.entities.Crime</class>
 
 
 
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/eventdb?useSSL=false&amp;useLegacyDatetimeCode=false&amp;serverTimezone=MST" />
       <property name="javax.persistence.jdbc.user" value="eventuser"/>
-      <property name="javax.persistence.jdbc.password" value="user" />
+      <property name="javax.persistence.jdbc.password" value="event" />
       <property name="javax.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver" />
 
       <property name="hibernate.show_sql" value="false" />
