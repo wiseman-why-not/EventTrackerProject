@@ -14,9 +14,14 @@ public class CrimeServiceImpl implements CrimeService {
 
 	@Autowired
 	private CrimeRepository repo;
+	
+	public List<Crime> listNeighborhoods(){
+		List<Crime> crimes = repo.findAll();
+		return crimes;
+	}
 
 	@Override
-	public List<Crime> listCrimes(Crime crime) {
+	public List<Crime> listCrimes() {
 		List<Crime> crimes = repo.findAll();
 		return crimes;
 	}
@@ -47,6 +52,12 @@ public class CrimeServiceImpl implements CrimeService {
 		}
 		
 		return false;
+	}
+
+	@Override
+	public List<Crime> findByNeighborhood(String neighborhood) {
+		
+		return null;
 	}
 	
 }

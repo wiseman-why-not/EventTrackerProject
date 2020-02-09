@@ -8,6 +8,7 @@ public interface CrimeService {
 
 	Crime addCrimeById(Crime crime);
 	boolean deleteCrimeById(int crimeId);
-	List<Crime> listCrimes(Crime crime);
+	List<Crime> listCrimes();
+	List<Crime> findByNeighborhood(String neighborhood);
 	Crime getCrime(int id);
 }
