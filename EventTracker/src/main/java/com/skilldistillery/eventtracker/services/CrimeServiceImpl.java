@@ -37,9 +37,9 @@ public class CrimeServiceImpl implements CrimeService {
 	}
 	
 	@Override
-	public Crime addCrimeById(Crime crime) {
+	public Crime addCrime(Crime crime) {
 		repo.saveAndFlush(crime);
-		return null;
+		return crime;
 	}
 
 	@Override

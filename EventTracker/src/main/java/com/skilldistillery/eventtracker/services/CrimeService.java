@@ -6,7 +6,7 @@ import com.skilldistillery.eventtracker.entities.Crime;
 
 public interface CrimeService {
 
-	Crime addCrimeById(Crime crime);
+	Crime addCrime(Crime crime);
 	boolean deleteCrimeById(int crimeId);
 	List<Crime> listCrimes();
 	List<Crime> findByNeighborhood(String neighborhood);

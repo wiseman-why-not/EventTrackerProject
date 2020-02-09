@@ -8,6 +8,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -38,6 +40,23 @@ public class CrimeController {
 		return crime;
 	}
 	
+	@PostMapping("crimes")
+	public Crime create(@RequestBody Crime crime, HttpServletRequest req,
+			HttpServletResponse res) {
+		try {
+			srv.addCrime(crime);
+			res.setStatus(201);
+			StringBuffer url = req.getRequestURL();
+			System.out.println("************");
+			System.out.println(url);
+			url.append("/").append(crime.getId());
+		} catch (Exception e) {
+			res.setStatus(404);
+			e.printStackTrace();
+			return null;
+		}
+		return crime;
+	}
 
 
 }
