@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -26,6 +27,15 @@ public class CrimeController {
 		List<Crime> crimes = srv.listCrimes();
 		res.setStatus(202);
 		return crimes;
+	}
+	
+	@GetMapping("crimes/{id}")
+	public Crime findCrimeById(@PathVariable Integer id, HttpServletResponse res) {
+		Crime crime = srv.getCrime(id);
+		if (crime == null) {
+			res.setStatus(404);
+		}
+		return crime;
 	}
 	
 
