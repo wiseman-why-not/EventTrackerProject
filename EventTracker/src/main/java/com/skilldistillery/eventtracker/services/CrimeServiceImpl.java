@@ -41,6 +41,20 @@ public class CrimeServiceImpl implements CrimeService {
 		repo.saveAndFlush(crime);
 		return crime;
 	}
+	
+	@Override
+	public Crime replaceCrime(int crimeId, Crime crime) {
+		Optional<Crime> crimeOpt = repo.findById(crimeId);
+		Crime updateCrime = null;
+		if(crimeOpt.isPresent()) {
+			updateCrime = crimeOpt.get();
+			updateCrime.setId(crime.getId());
+			updateCrime.setCrimeName(crime.getCrimeName());
+			updateCrime.setNeighborhood(crime.getNeighborhood());
+			repo.saveAndFlush(updateCrime);
+		} 
+		return updateCrime;
+	}
 
 	@Override
 	public boolean deleteCrimeById(int crimeId) {

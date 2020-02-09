@@ -11,4 +11,5 @@ public interface CrimeService {
 	List<Crime> listCrimes();
 	List<Crime> findByNeighborhood(String neighborhood);
 	Crime getCrime(int id);
+	Crime replaceCrime(int crimeId, Crime crime);
 }
