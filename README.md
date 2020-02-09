@@ -4,7 +4,7 @@
 
 ### Overview
 
-Crime Tracker, keeps track of crimes in neighborhood in the greater Denver area. 
+Crime Tracker, keeps track of crimes in neighborhood in the greater Denver area.
 
 ### REST API Endpoints
 
@@ -16,7 +16,7 @@ TODO - table of api URIs, and HTTP verbs
 | GET       | `/api/crimes/2`   |              | Representation of _crimes_ `2` | **Retrieve** endpoint |
 | POST      | `/api/crimes`      | Representation of a new _crimes_ resource | Description of the result of the operation | **Create** endpoint |
 | PUT       | `/api/crimes/2`   | Representation of a new version of _crimes_ `2` | | **Replace** endpoint |
-| DELETE    | `/api/crimes/2`   |              | | **Delete** route |
+| DELETE    | `/api/crimes/2`   |              | Delete a crime from the database| **Delete** route |
 
 ### Technologies Used
 
