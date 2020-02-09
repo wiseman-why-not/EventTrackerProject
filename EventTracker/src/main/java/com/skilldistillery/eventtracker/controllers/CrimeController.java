@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -71,4 +72,14 @@ public class CrimeController {
 		return crime;		
 	}
 
+	// DELETE
+	@DeleteMapping("crimes/{id}")
+	public void deleteCrime(@PathVariable Integer id, HttpServletResponse res) {
+		boolean deleted = srv.deleteCrimeById(id);
+		if (deleted) {
+			res.setStatus(200);
+		} else {
+			res.setStatus(404);
+		}
+	}
 }
