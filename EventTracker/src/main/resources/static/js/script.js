@@ -129,19 +129,108 @@ function displayAllCrimes(crimes) {
 
 		tbodyData1.textContent = value.id;
 		tbodyRow.appendChild(tbodyData1);
+		
 
 		tbodyData2.textContent = value.crimeName;
+		tbodyData2.addEventListener('click', function(e){
+			crimeDetail(value);
+		});
 		tbodyRow.appendChild(tbodyData2);
 
 		tbodyData3.textContent = value.neighborhood;
 		tbodyRow.appendChild(tbodyData3);
 
 		tbody.appendChild(tbodyRow);
+		table.appendChild(tbody);
 	});
 
-	table.appendChild(tbody);
 	crimeDiv.appendChild(table);
+	
 
+
+}
+
+function crimeDetail(crime){
+	console.log("in crime detail");
+	console.log("id: " + crime.id);
+	console.log("crime: " + crime.crimeName);
+	console.log("neighborhood: " + crime.neighborhood);
+	
+	let singleCrimeData = document.getElementById('singleCrimeData');
+	singleCrimeData.textContent = '';
+
+	let h2Title = document.createElement('h2');
+	h2Title.textContent = crime.crimeName;
+	singleCrimeData.appendChild(h2Title);
+
+	let neighborhood = document.createElement('p');
+	neighborhood.textContent = crime.neighborhood;
+	singleCrimeData.appendChild(neighborhood);
+	
+	let btnBack = document.createElement('button');
+	btnBack.textContent = "Go Back";
+	
+	// edit and back button event listeners
+	let btnEdit = document.createElement('button');
+	btnEdit.textContent = "Edit Crime";
+	
+	btnBack.addEventListener('click', function(e){
+		singleCrimeData.textContent = '';
+	});
+	
+	btnEdit.addEventListener('click',function(e){
+		editCrime(crime);
+	});
+	
+	// append the buttons to the crime detail
+	singleCrimeData.appendChild(btnBack);
+	singleCrimeData.appendChild(btnEdit);
+
+}
+
+function editCrime(crimeObject){
+	let editCrimeDataDiv = document.getElementById('editCrimeData');
+
+	// create the form, give it a name
+	var form = document.createElement('form');
+	form.name = 'editForm';
+
+	var crimeNameInput = document.createElement('input');
+	crimeNameInput.name = 'crimeName'; // assign a name attribute
+	crimeNameInput.type = 'text'; // assign a type attribute
+	crimeNameInput.placeholder = crimeObject.crimeName; // assign a placeholder attribute
+
+	form.appendChild(crimeNameInput);
+
+	var crimeNeighborhoodInput = document.createElement('input');
+	crimeNeighborhoodInput.name = 'neighborhood'; // assign a name attribute
+	crimeNeighborhoodInput.type = 'text'; // assign a type attribute
+	crimeNeighborhoodInput.placeholder = crimeObject.neighborhood; // assign a placeholder attribute
+
+	form.appendChild(crimeNeighborhoodInput);
+
+	var submit = document.createElement('input');
+		submit.name = 'submit'; // assign a name attribute
+		submit.type = 'submit'; // assign a type attribute
+		submit.value = 'Submit Form'; // assign a value attribute
+
+		submit.addEventListener('click', function(e) { // Assign an event listener to the submit button variable
+
+			e.preventDefault();
+			var form = e.target.parentElement;
+			console.log(form);
+			
+			// print the crimeNameInput value to the console
+
+			console.log(form.crimeName.value);
+			console.log(form.neighborhood.value);
+
+			// clear the form data
+			form.reset();
+			editCrimeData.textContent = '';
+		});
+	form.appendChild(submit);
+	editCrimeDataDiv.appendChild(form);	
 }
 
 function postCrime(crimeObject) {
