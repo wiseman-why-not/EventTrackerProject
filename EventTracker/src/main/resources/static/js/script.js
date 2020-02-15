@@ -11,17 +11,22 @@ function init() {
 			getCrime(crimeId);
 		}
 	})
+	
+	document.createCrimeForm.create.addEventListener('click', function(event) {
+		event.preventDefault();
+		let newCrime = {};
+		let crName = document.createCrimeForm.crimeName.value;
+		let nborhood = document.createCrimeForm.neighborhood.value;
+		newCrime.crimeName = crName;
+		newCrime.neighborhood = nborhood;
+		if (newCrime){
+			postCrime(newCrime);
+		}
+	})
 }
 
 function getCrime(crimeId) {
-	// TODO:
-	// * Use XMLHttpRequest to perform a GET request to "api/films/"
-	// with the filmId appended.
-	// * On success, if a response was received parse the film data
-	// and pass the film object to displayFilm().
-	// * On failure, or if no response text was received, put "Film not found"
-	// in the filmData div.
-	var xhr = new XMLHttpRequest();
+	let xhr = new XMLHttpRequest();
 
 	xhr.open('GET', 'api/crimes/' + crimeId);
 
@@ -57,3 +62,30 @@ function displayCrime(crime) {
 	crimeDiv.appendChild(neighborhood);
 
 }
+
+function postCrime(crimeObject){
+	let xhr = new XMLHttpRequest();
+	xhr.open('POST', 'api/crimes', true);
+
+	xhr.setRequestHeader("Content-type", "application/json"); // Specify JSON request body
+
+	xhr.onreadystatechange = function() {
+	  if (xhr.readyState === 4 ) {
+	    if ( xhr.status == 200 || xhr.status == 201 ) { // Ok or Created
+	      var crime = JSON.parse(xhr.responseText);
+	      console.log(crime);
+	    }
+	    else {
+	      console.log("POST request failed.");
+	      console.error(xhr.status + ': ' + xhr.responseText);
+	    }
+	  }
+	};
+
+	var userObjectJson = JSON.stringify(crimeObject); // Convert JS object to JSON string
+
+	xhr.send(userObjectJson);
+}
+
+
+
