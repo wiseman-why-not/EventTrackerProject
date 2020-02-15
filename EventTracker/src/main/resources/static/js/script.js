@@ -1,16 +1,16 @@
 window.addEventListener('load', function(e) {
-  console.log('document loaded');
-  init();
+	console.log('document loaded');
+	init();
 });
 
 function init() {
-  document.crimeForm.lookup.addEventListener('click', function(event) {
-    event.preventDefault();
-    var crimeId = document.crimeForm.crimeId.value;
-    if (!isNaN(crimeId) && crimeId > 0) {
-      getCrime(crimeId);
-    }
-  })
+	document.crimeForm.lookup.addEventListener('click', function(event) {
+		event.preventDefault();
+		var crimeId = document.crimeForm.crimeId.value;
+		if (!isNaN(crimeId) && crimeId > 0) {
+			getCrime(crimeId);
+		}
+	})
 }
 
 function getCrime(crimeId) {
@@ -30,8 +30,7 @@ function getCrime(crimeId) {
 		if (xhr.readyState === 4 && xhr.status < 400) {
 			var crime = JSON.parse(xhr.responseText);
 			console.log(crime);
-	//		displayFilm(crime);
-	//		displayFilmsActors(film);
+			 displayCrime(crime);
 		}
 
 		if (xhr.readyState === 4 && xhr.status >= 400) {
@@ -44,23 +43,17 @@ function getCrime(crimeId) {
 
 	xhr.send(null);
 }
-//
-//let neighborhoods = document.crimeForm.listOfNeighborhoods
-//
-//
-//var ul = document.createElement('ul');
-//
-//items.forEach(function(value, index, array) {
-//// create a new list item;
-//var li = document.createElement('li');
-//
-//// assign the value at the current position
-//// in the array to the list item's text value
-//li.textContent = value;
-//
-//// append the list item to the unordered list
-//ul.appendChild(li);
-//});
-//
-////append the entire unordered list to the body
-//document.body.appendChild(ul);
+
+function displayCrime(crime) {
+	var crimeDiv = document.getElementById('crimeData');
+	crimeDiv.textContent = '';
+
+	let h2Title = document.createElement('h2');
+	h2Title.textContent = crime.crimeName;
+	crimeDiv.appendChild(h2Title);
+
+	let neighborhood = document.createElement('p');
+	neighborhood.textContent = crime.neighborhood;
+	crimeDiv.appendChild(neighborhood);
+
+}
