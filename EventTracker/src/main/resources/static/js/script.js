@@ -24,6 +24,7 @@ function init() {
 		if (newCrime) {
 			postCrime(newCrime);
 			newCrime = {};
+			getCrimes();
 		}
 	})
 }
@@ -37,7 +38,6 @@ function getCrimes() {
 		// If status is below error range, and readyState is 4 (DONE)
 		if (xhr.readyState === 4 && xhr.status < 400) {
 			var crimes = JSON.parse(xhr.responseText);
-			console.log(crimes);
 			displayAllCrimes(crimes);
 		}
 
@@ -173,27 +173,49 @@ function crimeDetail(crime){
 	// edit and back button event listeners
 	let btnEdit = document.createElement('button');
 	btnEdit.textContent = "Edit Crime";
+
+	let btnDelete = document.createElement('button');
+	btnDelete.textContent = "Delete Crime";
 	
 	btnBack.addEventListener('click', function(e){
 		singleCrimeData.textContent = '';
+		getCrimes();
 	});
 	
 	btnEdit.addEventListener('click',function(e){
 		editCrime(crime);
+		getCrimes();
+	});
+
+	btnDelete.addEventListener('click',function(e){
+		e.preventDefault();
+		deleteCrime(crime);
+		singleCrimeData.textContent = '';
+		getCrimes();
 	});
 	
 	// append the buttons to the crime detail
 	singleCrimeData.appendChild(btnBack);
 	singleCrimeData.appendChild(btnEdit);
+	singleCrimeData.appendChild(btnDelete);
+
 
 }
 
 function editCrime(crimeObject){
+
 	let editCrimeDataDiv = document.getElementById('editCrimeData');
 
 	// create the form, give it a name
 	var form = document.createElement('form');
 	form.name = 'editForm';
+
+	var crimeIdInput = document.createElement('input');
+	crimeIdInput.name = 'id'; // assign a name attribute
+	crimeIdInput.type = 'hidden'; // assign a type attribute
+	crimeIdInput.value = crimeObject.id; // assign the id value
+
+	form.appendChild(crimeIdInput);
 
 	var crimeNameInput = document.createElement('input');
 	crimeNameInput.name = 'crimeName'; // assign a name attribute
@@ -221,16 +243,73 @@ function editCrime(crimeObject){
 			console.log(form);
 			
 			// print the crimeNameInput value to the console
-
+			console.log(form.id.value);
 			console.log(form.crimeName.value);
 			console.log(form.neighborhood.value);
+			// reassign the crime with updated info
+			crimeObject.crimeName = form.crimeName.value;
+			crimeObject.neighborhood = form.neighborhood.value;
 
+			// PUT request, update crime
+			updateCrime(crimeObject);
 			// clear the form data
 			form.reset();
 			editCrimeData.textContent = '';
+			getCrimes();
 		});
 	form.appendChild(submit);
 	editCrimeDataDiv.appendChild(form);	
+}
+
+function updateCrime(crimeObject) {
+	let xhr = new XMLHttpRequest();
+	xhr.open('Put', 'api/crimes/' +crimeObject.id , true);
+
+	xhr.setRequestHeader("Content-type", "application/json"); // Specify JSON
+	// request body
+
+	xhr.onreadystatechange = function() {
+		if (xhr.readyState === 4) {
+			if (xhr.status == 200 || xhr.status == 201) { // Ok or Created
+				var updatedCrime = JSON.parse(xhr.responseText);
+				console.log(updatedCrime);
+				
+			} else {
+				console.log("PUT request failed.");
+				console.error(xhr.status + ': ' + xhr.responseText);
+			}
+		}
+	};
+
+	var userObjectJson = JSON.stringify(crimeObject); // Convert JS object to
+	// JSON string
+
+	xhr.send(userObjectJson);
+}
+
+function deleteCrime(crimeObject){
+	let xhr = new XMLHttpRequest();
+	xhr.open('Delete', 'api/crimes/' + crimeObject.id , true);
+
+	xhr.setRequestHeader("Content-type", "application/json"); // Specify JSON
+	// request body
+
+	xhr.onreadystatechange = function() {
+		if (xhr.readyState === 4) {
+			if (xhr.status == 200 || xhr.status == 201) { // Ok or Created
+				console.log("successfully deleted");
+				getCrimes();
+			} else {
+				console.log("delete request failed.");
+				console.error(xhr.status + ': ' + xhr.responseText);
+			}
+		}
+	};
+
+	var userObjectJson = JSON.stringify(crimeObject); // Convert JS object to
+	// JSON string
+
+	xhr.send(userObjectJson);
 }
 
 function postCrime(crimeObject) {
@@ -245,6 +324,7 @@ function postCrime(crimeObject) {
 			if (xhr.status == 200 || xhr.status == 201) { // Ok or Created
 				var crime = JSON.parse(xhr.responseText);
 				console.log(crime);
+				getCrimes();
 			} else {
 				console.log("POST request failed.");
 				console.error(xhr.status + ': ' + xhr.responseText);
