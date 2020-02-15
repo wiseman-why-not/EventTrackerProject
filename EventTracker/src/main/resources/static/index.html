@@ -9,36 +9,22 @@
 
 	<h1>Welcome to Denver Crime Tracker</h1>
 
-	<!--   	<form name="crimeForm">
-  		<select name="neighborhood">
-  			<option value="LoDo">LoDo</option>
-  			<option value="Cherry Creek">Cherry Creek</option>
-  			<option value="River North Art Distric">River North Art Distric</option>
-  			<option value="Washington Park">Washington Park</option>
-  			<option value="West Colfax">West Colfax</option>
-  			<option value="Plat Park">Plat Park</option>
-  			<option value="Greenwood Village">Greenwood Village</option>
-  			<option value="Wellshire">Wellshire</option>
-  			<option value="Belcaro">Belcaro</option>
-  		</select>
-		<input type="number" name="neighbor">
-		<button name="lookup">List Neighborhoods</button>
-	</form> -->
-	
 	<form name="crimeForm">
 		<input type="number" name="crimeId">
 		<button name="lookup">Find Crime by Id</button>
 	</form>
 	
 	<form name="createCrimeForm">
-		<label>Crime Name:</label><input type="text" name="crimeName">
-		<label>neighborhood:</label><input type="text" name="neighborhood">
+		<label>Crime Name:</label><input type="text" name="crimeName"> <br>
+		<label>neighborhood:</label><input type="text" name="neighborhood"> <br>
 		<button name="create">Create a Crime</button>
 	</form>
 	
 	
 	<div id="output">
+		
 		<div id="crimeData"></div>
+		<div id="allCrimeData"></div>
 	</div>
 
 </body>
