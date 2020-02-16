@@ -1,7 +1,7 @@
 window.addEventListener('load', function(e) {
 	console.log('document loaded');
 	init();
-	getCrimes();
+	
 });
 
 function init() {
@@ -27,30 +27,10 @@ function init() {
 			getCrimes();
 		}
 	})
+	getCrimes();
 }
 
-function getCrimes() {
-	let xhr = new XMLHttpRequest();
 
-	xhr.open('GET', 'api/crimes/');
-
-	xhr.onreadystatechange = function() {
-		// If status is below error range, and readyState is 4 (DONE)
-		if (xhr.readyState === 4 && xhr.status < 400) {
-			var crimes = JSON.parse(xhr.responseText);
-			displayAllCrimes(crimes);
-		}
-
-		if (xhr.readyState === 4 && xhr.status >= 400) {
-			console.log(xhr.status + ': ' + xhr.responseText);
-			let crimeData = document.getElementById('allCrimeData');
-			crimeData.textContent = "Crime not found";
-
-		}
-	};
-
-	xhr.send(null);
-}
 
 function getCrime(crimeId) {
 	let xhr = new XMLHttpRequest();
@@ -62,7 +42,7 @@ function getCrime(crimeId) {
 		if (xhr.readyState === 4 && xhr.status < 400) {
 			var crime = JSON.parse(xhr.responseText);
 			console.log(crime);
-			displayCrime(crime);
+			crimeDetail(crime);
 		}
 
 		if (xhr.readyState === 4 && xhr.status >= 400) {
@@ -87,6 +67,40 @@ function displayCrime(crime) {
 	let neighborhood = document.createElement('p');
 	neighborhood.textContent = crime.neighborhood;
 	crimeDiv.appendChild(neighborhood);
+
+
+	let btnBack = document.createElement('button');
+	btnBack.textContent = "Go Back";
+	
+	// edit and back button event listeners
+	let btnEdit = document.createElement('button');
+	btnEdit.textContent = "Edit Crime";
+
+	let btnDelete = document.createElement('button');
+	btnDelete.textContent = "Delete Crime";
+	
+	btnBack.addEventListener('click', function(e){
+		var crimeTable = document.getElementById('allCrimeData');
+			if (crimeTable !== null){
+				crimeTable.remove();
+				getCrimes();
+			}
+	});
+	
+	btnEdit.addEventListener('click',function(e){
+		editCrime(crime);
+		getCrimes();
+	});
+
+	btnDelete.addEventListener('click',function(e){
+		e.preventDefault();
+		deleteCrime(crime);
+		getCrimes();
+	});
+
+	crimeDiv.appendChild(btnBack);
+	crimeDiv.appendChild(btnEdit);
+	crimeDiv.appendChild(btnDelete);
 
 }
 
@@ -145,16 +159,10 @@ function displayAllCrimes(crimes) {
 	});
 
 	crimeDiv.appendChild(table);
-	
-
 
 }
 
 function crimeDetail(crime){
-	console.log("in crime detail");
-	console.log("id: " + crime.id);
-	console.log("crime: " + crime.crimeName);
-	console.log("neighborhood: " + crime.neighborhood);
 	
 	let singleCrimeData = document.getElementById('singleCrimeData');
 	singleCrimeData.textContent = '';
@@ -185,6 +193,7 @@ function crimeDetail(crime){
 	btnEdit.addEventListener('click',function(e){
 		editCrime(crime);
 		getCrimes();
+		
 	});
 
 	btnDelete.addEventListener('click',function(e){
@@ -252,14 +261,69 @@ function editCrime(crimeObject){
 
 			// PUT request, update crime
 			updateCrime(crimeObject);
+			editCrimeData.textContent = '';
+			let singleCrimeData = document.getElementById('singleCrimeData');
+	singleCrimeData.textContent = '';
 			// clear the form data
 			form.reset();
-			editCrimeData.textContent = '';
 			getCrimes();
 		});
 	form.appendChild(submit);
 	editCrimeDataDiv.appendChild(form);	
 }
+
+// GET display all crimes
+function getCrimes() {
+	let xhr = new XMLHttpRequest();
+
+	xhr.open('GET', 'api/crimes/');
+
+	xhr.onreadystatechange = function() {
+		// If status is below error range, and readyState is 4 (DONE)
+		if (xhr.readyState === 4 && xhr.status < 400) {
+			var crimes = JSON.parse(xhr.responseText);
+			displayAllCrimes(crimes);
+		}
+
+		if (xhr.readyState === 4 && xhr.status >= 400) {
+			console.log(xhr.status + ': ' + xhr.responseText);
+			let crimeData = document.getElementById('allCrimeData');
+			crimeData.textContent = "Crime not found";
+
+		}
+	};
+
+	xhr.send(null);
+}
+
+// CREATE crime
+function postCrime(crimeObject) {
+	let xhr = new XMLHttpRequest();
+	xhr.open('POST', 'api/crimes', true);
+
+	xhr.setRequestHeader("Content-type", "application/json"); // Specify JSON
+	// request body
+
+	xhr.onreadystatechange = function() {
+		if (xhr.readyState === 4) {
+			if (xhr.status == 200 || xhr.status == 201) { // Ok or Created
+				var crime = JSON.parse(xhr.responseText);
+				console.log(crime);
+				getCrimes();
+			} else {
+				console.log("POST request failed.");
+				console.error(xhr.status + ': ' + xhr.responseText);
+			}
+		}
+	};
+
+	var userObjectJson = JSON.stringify(crimeObject); // Convert JS object to
+	// JSON string
+
+	xhr.send(userObjectJson);
+}
+
+// UPDATE/Put crime
 
 function updateCrime(crimeObject) {
 	let xhr = new XMLHttpRequest();
@@ -273,6 +337,7 @@ function updateCrime(crimeObject) {
 			if (xhr.status == 200 || xhr.status == 201) { // Ok or Created
 				var updatedCrime = JSON.parse(xhr.responseText);
 				console.log(updatedCrime);
+				getCrimes();
 				
 			} else {
 				console.log("PUT request failed.");
@@ -286,6 +351,8 @@ function updateCrime(crimeObject) {
 
 	xhr.send(userObjectJson);
 }
+
+// DELETE crime
 
 function deleteCrime(crimeObject){
 	let xhr = new XMLHttpRequest();
@@ -312,28 +379,3 @@ function deleteCrime(crimeObject){
 	xhr.send(userObjectJson);
 }
 
-function postCrime(crimeObject) {
-	let xhr = new XMLHttpRequest();
-	xhr.open('POST', 'api/crimes', true);
-
-	xhr.setRequestHeader("Content-type", "application/json"); // Specify JSON
-	// request body
-
-	xhr.onreadystatechange = function() {
-		if (xhr.readyState === 4) {
-			if (xhr.status == 200 || xhr.status == 201) { // Ok or Created
-				var crime = JSON.parse(xhr.responseText);
-				console.log(crime);
-				getCrimes();
-			} else {
-				console.log("POST request failed.");
-				console.error(xhr.status + ': ' + xhr.responseText);
-			}
-		}
-	};
-
-	var userObjectJson = JSON.stringify(crimeObject); // Convert JS object to
-	// JSON string
-
-	xhr.send(userObjectJson);
-}
