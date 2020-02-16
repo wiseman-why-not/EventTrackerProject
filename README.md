@@ -30,3 +30,10 @@ TODO - table of api URIs, and HTTP verbs
 + Still getting use Representational State Transfer (REST)
 + Understanding that JPA, to create a Java entity class that models the tables in my database. Mapping my classes using JPA
 + Using Spring Rest annotations and using Spring Data JPA to perform all CRUD operations.
++ Week 13 homework was using JSON and SpringREST as it is handling JSON responses with JavaScript.
++ Building out the front end for this application using Javascript.
++ Adding scripts to a web application
++ Send asynchronous requests to Java controllers with JavaScript's `XMLHttpRequest
++ Consume and parse JSON responses with JavaScript
++ Build HTML with JavaScript
++ Send POST/PUT/DELETE requests with XMLHttpRequest
