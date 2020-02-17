@@ -5,6 +5,8 @@ window.addEventListener('load', function (e) {
 });
 
 function init() {
+
+	let arrayOfNeighborhood = [];
 	// search by id form
 	document.crimeForm.lookup.addEventListener('click', function (event) {
 		event.preventDefault();
@@ -37,25 +39,21 @@ function init() {
 	document.searchNeighborhoodForm.search.addEventListener('click', function (event) {
 		event.preventDefault();
 		let searchTerm = document.searchNeighborhoodForm.neighborhood.value;
-		let arrayOfNeighborhood = [];
+	//	let arrayOfNeighborhood = [];
 		// return array of crimes
 		function getCrimesArray() {
 			let xhr = new XMLHttpRequest();
-			var crimesArray = [];
 			xhr.open('GET', 'api/crimes/');
 
 			xhr.onreadystatechange = function () {
 				// If status is below error range, and readyState is 4 (DONE)
 				if (xhr.readyState === 4 && xhr.status < 400) {
 					crimes = JSON.parse(xhr.responseText);
-					for (let i = 0; i < crimes.length; i++) {
-						if (searchTerm == crimes[i].neighborhood) {
-							crimesArray.push(crimes[i]);
-						}
-
-					}
-					console.log(crimesArray);
-					return crimesArray;
+					arrayOfNeighborhood = crimes.filter(function(crime) {
+						return crime.neighborhood === searchTerm;
+					});
+					//console.log(arrayOfNeighborhood);
+					return arrayOfNeighborhood;
 				}
 
 				if (xhr.readyState === 4 && xhr.status >= 400) {
@@ -65,12 +63,16 @@ function init() {
 
 				}
 			};
-			if (crimesArray)
 				xhr.send(null);
 		}
-		arrayOfNeighborhood = this.getCrimesArray();
-		console.log(arrayOfNeighborhood);
-		displayNeighborhoods(arrayOfNeighborhood);
+
+		getCrimesArray();
+		if(arrayOfNeighborhood.length > 0){
+			console.log(arrayOfNeighborhood);
+			let form = event.target.parentElement;
+			form.reset();
+			displayNeighborhoods(arrayOfNeighborhood)
+		}
 
 	})
 
@@ -378,6 +380,9 @@ function displayNeighborhoods(crimes) {
 	let neighborhoodDiv = document.getElementById('neighborhoodSearchData');
 	neighborhoodDiv.textContent = '';
 
+	let hr = document.createElement('hr');
+	neighborhoodDiv.appendChild(hr);
+
 	let table = document.createElement('table');
 
 	let thead = document.createElement('thead');
@@ -417,6 +422,7 @@ function displayNeighborhoods(crimes) {
 		tbodyData2.textContent = value.crimeName;
 		tbodyData2.addEventListener('click', function (e) {
 			crimeDetail(value);
+			neighborhoodDiv.textContent = '';
 		});
 		tbodyRow.appendChild(tbodyData2);
 
@@ -424,8 +430,8 @@ function displayNeighborhoods(crimes) {
 		tbodyRow.appendChild(tbodyData3);
 
 		tbody.appendChild(tbodyRow);
-		table.appendChild(tbody);
 	});
+	table.appendChild(tbody);
 
 	neighborhoodDiv.appendChild(table);
 
